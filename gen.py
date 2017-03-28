@@ -261,7 +261,19 @@ def add_typo(record, prob):
         print tmp.values(), record.values()
         return tmp
 
-#def name_variant(record):
+
+def name_variant(record, v):
+    """
+    replace a name with its variant
+    :param record:
+    :param v: variant dictionary
+    :return: modified record
+    """
+    tmp = record
+    t = random.randint(0,1)
+    k = 'first_name' if t==0 else 'last_name'
+    tmp[k] = v[tmp[k]][random.randint(0,len(v[tmp[k]])-1)]
+    return tmp
 
 
 def match(x, y):

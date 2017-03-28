@@ -16,15 +16,22 @@ for k in dat.keys():
     dat[k] = dob(dat[k])
 data = deepcopy(dat)
 
+v = {}
+with open('data/lookup.txt','r') as f:
+    reader = csv.reader(f)
+    for i in reader:
+        v[i[0]] = [i[1]]
+
 
 rate = 0.03
-rate_missing = 0.3
+rate_missing = 0.2
 rate_swap = 0.2
 rate_typo = 0.5
+rate_vari = 0.1
 typo_prob = [0.4, 0.3, 0.15, 0.15]
 n = int(rate*len(dat.keys()))
 d = {}
-op = [rate_missing, rate_swap, rate_typo]
+op = [rate_missing, rate_swap, rate_typo, rate_vari]
 q = [sum(op[:x]) for x in range(1, len(op) + 1)]
 
 while len(d.keys()) <= n:
@@ -40,6 +47,8 @@ while len(d.keys()) <= n:
             tmp = swap_date(data[k])
     elif p < q[2]:
         tmp = add_typo(data[k], typo_prob)
+    elif p < q[3]:
+        tmp = name_variant(data[k], v)
     if not match(tmp,dat[k]):
         d[k] = tmp
 
