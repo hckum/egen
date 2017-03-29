@@ -1,7 +1,7 @@
 # Functions for Error Generation Simulator v0.1
 # by Han Wang
 # 03/27/2017 first created, data preprocessing
-# 03/28/2017 add typo generation
+# 03/28/2017 add typo generation, name variant generation
 
 import csv
 import zipfile
@@ -54,6 +54,25 @@ def field_filter(data, fields):
     return d
 
 
+def load_config(fpath):
+    """
+    Load config
+    :param fpath: path to config.txt
+    :return: config dictionary
+    """
+    d = {}
+    for line in open(fpath, 'r'):
+        l = line.strip()
+        if not l.startswith('#'):
+            k = l.split('=')
+            if k!=['']:
+                if k[1].strip()[0].isdigit():
+                    d[k[0].strip()] = float(k[1].strip())
+                else:
+                    d[k[0].strip()] = list([x.strip() for x in k[1].split(',')])
+    return d
+
+
 def dob(record):
     """
     Make up dob for a record
@@ -69,6 +88,7 @@ def dob(record):
         year -= 1
     tmp['dob'] = ymd[5:] + '-' + str(year)
     return tmp
+
 
 def swap_fields(record):
     """
@@ -124,7 +144,7 @@ def insert(record):
     tmp = record
     pos = random.randint(0,len(tmp.keys())-1)
     field = tmp[tmp.keys()[pos]]
-    if tmp.keys()[pos]=='dob':
+    if tmp.keys()[pos]=='dob' and field!='':
         # valid insertion: months: 2 -> 12, days: 5->25
         mdy = tmp['dob'].split('-')
         type = 0
@@ -171,7 +191,7 @@ def delete(record):
     tmp = record
     pos = random.randint(0, len(tmp.keys()) - 1)
     field = tmp[tmp.keys()[pos]]
-    if tmp.keys()[pos]=='dob':
+    if tmp.keys()[pos]=='dob' and field!='':
         # valid deletion: 21->01, 21->02, 20->02
         mdy = tmp['dob'].split('-')
         t = random.randint(0,1)
@@ -196,8 +216,9 @@ def transpose(record):
     if tmp.keys()[pos]=='dob':
         pass
     else:
-        p = random.randint(0, len(field)-2)
-        tmp[tmp.keys()[pos]] = field[:p]+field[p+1]+field[p]+field[p+2:]
+        if len(field)>2:
+            p = random.randint(0, len(field)-2)
+            tmp[tmp.keys()[pos]] = field[:p]+field[p+1]+field[p]+field[p+2:]
     return tmp
 
 
@@ -241,25 +262,41 @@ def add_typo(record, prob):
     k = random.random()
     # insertion
     if k<=q[0]:
-        print '===Insertion==='
+        #print '===Insertion==='
         tmp = insert(tmp)
     # deletion
     elif k<=q[1]:
-        print '===Deletion==='
+        #print '===Deletion==='
         tmp = delete(tmp)
     # transpose
     elif k<=q[2]:
-        print '===Transposition==='
+        #print '===Transposition==='
         tmp = transpose(tmp)
     # substitution
     elif k<=q[3]:
-        print '===Substitution==='
+        #print '===Substitution==='
         tmp = substitute(tmp)
-    if tmp==record:
-        add_typo(record, prob)
-    else:
-        print tmp.values(), record.values()
-        return tmp
+    return tmp
+
+
+def add_prefix_suffix(record):
+    """
+    Add a prefix or suffix
+    :param record:
+    :return: modified record
+    """
+    tmp = record
+    return tmp
+
+
+def misspell(record):
+    """
+    Replace the name with a misspelled name
+    :param record:
+    :return: modified record
+    """
+    tmp = record
+    return tmp
 
 
 def name_variant(record, v):
@@ -272,7 +309,9 @@ def name_variant(record, v):
     tmp = record
     t = random.randint(0,1)
     k = 'first_name' if t==0 else 'last_name'
-    tmp[k] = v[tmp[k]][random.randint(0,len(v[tmp[k]])-1)]
+    if tmp[k] in v.keys():
+        #tmp[k] = v[tmp[k]][0]
+        tmp[k] = v[tmp[k]][random.randint(0,len(v[tmp[k]])-1)]
     return tmp
 
 
