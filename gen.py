@@ -2,14 +2,10 @@
 # by Han Wang
 # 03/27/2017 first created, data preprocessing
 # 03/28/2017 add typo generation, name variant generation
+# 03/29/2017 add config file
 
-import csv
-import zipfile
+import csv, zipfile, calendar, random, string, copy
 from datetime import date, datetime
-import calendar
-import random
-import string
-import copy
 
 
 def readzip(fpath):
@@ -33,8 +29,6 @@ def readzip(fpath):
             d[i[2]] = {}
             for n in range(len(i)):
                 d[i[2]][title[n]] = i[n].strip()
-
-            #d[i[2]] = [x.strip() for x in i] # [i[x].strip() for x in [9, 10, 25, 28]]
     return d
 
 
@@ -49,8 +43,11 @@ def field_filter(data, fields):
     d = {}
     for k in data.keys():
         d[k] = {}
+        d[k]['original'] = {}
+        d[k]['modified'] = {}
+        d[k]['modifier'] = []
         for f in fields:
-            d[k][f] = data[k][f]
+            d[k]['original'][f] = data[k][f]
     return d
 
 
@@ -87,7 +84,19 @@ def dob(record):
     while '02-29' in ymd and not calendar.isleap(year):
         year -= 1
     tmp['dob'] = ymd[5:] + '-' + str(year)
+    del tmp['birth_age']
     return tmp
+
+
+def add_mod(record, mod):
+    """
+    Add modifier information to record
+    :param record:
+    :param mod: modifier
+    :return:
+    """
+    record['modifier'] += [mod]
+    return record
 
 
 def swap_fields(record):
@@ -96,11 +105,10 @@ def swap_fields(record):
     :param record:
     :return: modified record
     """
-    tmp = record
-    t = record['last_name']
-    tmp['last_name'] = record['first_name']
-    tmp['first_name'] = t
-    return tmp
+    record['modified']['last_name'] = record['original']['first_name']
+    record['modified']['first_name'] = record['original']['last_name']
+    add_mod(record, 'field swap')
+    return record
 
 
 def swap_date(record):
@@ -109,18 +117,18 @@ def swap_date(record):
     :param record:
     :return: modified record
     """
-    tmp = record
-    k = record['dob']
+    k = record['modified']['dob']
     try:
         l = [i for i in k.split('-')]
         k = '-'.join([l[1],l[0],l[2]])
         datetime.strptime(k,'%m-%d-%Y')
     except IndexError:
-        return tmp
+        return record
     except ValueError:
-        return tmp
-    tmp['dob'] = k
-    return tmp
+        return record
+    record['modified']['dob'] = k
+    add_mod(record, 'date swap')
+    return record
 
 
 def del_field(record):
@@ -129,10 +137,10 @@ def del_field(record):
     :param record:
     :return: modified record
     """
-    tmp = record
-    f = random.randint(0,len(record.keys())-1)
-    tmp[tmp.keys()[f]] = ''
-    return tmp
+    f = random.randint(0,len(record['modified'].keys())-1)
+    record['modified'][record['modified'].keys()[f]] = ''
+    add_mod(record, 'missing at '+str(record['modified'].keys()[f]))
+    return record
 
 
 def insert(record):
@@ -141,7 +149,7 @@ def insert(record):
     :param record:
     :return: modified record
     """
-    tmp = record
+    tmp = record['modified']
     pos = random.randint(0,len(tmp.keys())-1)
     field = tmp[tmp.keys()[pos]]
     if tmp.keys()[pos]=='dob' and field!='':
@@ -165,6 +173,8 @@ def insert(record):
             else:
                 mdy[1] = str(int(mdy[1])+t*10)
         tmp['dob'] = '-'.join(mdy)
+        if tmp['dob']!=record['original']['dob']:
+            add_mod(record, 'insertion at dob')
     elif field.isdigit():
         # voter_reg_num insertion
         p = random.randint(0, len(field))
@@ -172,6 +182,7 @@ def insert(record):
             tmp[tmp.keys()[pos]] += string.digits[random.randint(0,9)]
         else:
             tmp[tmp.keys()[pos]] = field[:p]+string.digits[random.randint(0,9)]+field[p:]
+        add_mod(record, 'insertion at '+tmp.keys()[pos]+' pos '+str(p))
     elif field.isalpha():
         # last_name and first_name insertion
         p = random.randint(0,len(field))
@@ -179,6 +190,7 @@ def insert(record):
             tmp[tmp.keys()[pos]] += string.uppercase[random.randint(0,25)]
         else:
             tmp[tmp.keys()[pos]] = field[:p]+string.uppercase[random.randint(0,25)]+field[p:]
+        add_mod(record, 'insertion at '+tmp.keys()[pos]+' pos '+str(p))
     return tmp
 
 
@@ -188,7 +200,7 @@ def delete(record):
     :param record:
     :return: modified record
     """
-    tmp = record
+    tmp = record['modified']
     pos = random.randint(0, len(tmp.keys()) - 1)
     field = tmp[tmp.keys()[pos]]
     if tmp.keys()[pos]=='dob' and field!='':
@@ -198,9 +210,11 @@ def delete(record):
         if int(mdy[t])>=10:
             mdy[t] = '0'+mdy[t][0] if int(mdy[t])%10==0 else '0'+mdy[t][random.randint(0,1)]
         tmp['dob'] = '-'.join(mdy)
+        add_mod(record, 'deletion at dob')
     elif field!='':
         p = random.randint(0,len(field)-1)
         tmp[tmp.keys()[pos]] = field[:p]+field[p+1:]
+        add_mod(record, 'deletion at '+tmp.keys()[pos]+' pos '+str(p))
     return tmp
 
 
@@ -210,8 +224,8 @@ def transpose(record):
     :param record:
     :return: modified record
     """
-    tmp = record
-    pos = random.randint(0, len(tmp.keys()) - 1)
+    tmp = record['modified']
+    pos = random.randint(0, len(tmp.keys()) - 2)
     field = tmp[tmp.keys()[pos]]
     if tmp.keys()[pos]=='dob':
         pass
@@ -219,6 +233,7 @@ def transpose(record):
         if len(field)>2:
             p = random.randint(0, len(field)-2)
             tmp[tmp.keys()[pos]] = field[:p]+field[p+1]+field[p]+field[p+2:]
+            add_mod(record, 'transposition at ' + tmp.keys()[pos] + ' pos ' + str(p))
     return tmp
 
 
@@ -228,17 +243,18 @@ def substitute(record):
     :param record:
     :return: modified record
     """
-    tmp = record
-    pos = random.randint(0, len(tmp.keys()) - 1)
+    tmp = record['modified']
+    pos = random.randint(0, len(tmp.keys()) - 2)
     field = tmp[tmp.keys()[pos]]
     if field!='':
         p = random.randint(0,len(field)-1)
         if tmp.keys()[pos]=='dob':
             pass
         elif field.isdigit():
-            tmp[tmp.keys()[pos]] = tmp[tmp.keys()[pos]].replace(tmp[tmp.keys()[pos]][p], string.digits[random.randint(0,9)])
+            tmp[tmp.keys()[pos]] = tmp[tmp.keys()[pos]][:p]+string.digits[random.randint(0,9)]+tmp[tmp.keys()[pos]][p+1:]
         elif field.isalpha():
-            tmp[tmp.keys()[pos]] = tmp[tmp.keys()[pos]].replace(tmp[tmp.keys()[pos]][p], string.uppercase[random.randint(0,25)])
+            tmp[tmp.keys()[pos]] = tmp[tmp.keys()[pos]][:p]+string.uppercase[random.randint(0,25)]+tmp[tmp.keys()[pos]][p+1:]
+        add_mod(record, 'substitution at '+tmp.keys()[pos]+' pos '+str(p))
     return tmp
 
 
@@ -258,25 +274,22 @@ def add_typo(record, prob):
     # create intervals
     q = [sum(p[:x]) for x in range(1, len(p)+1)]
 
-    tmp = copy.deepcopy(record)
+    tmp = record['modified']
     k = random.random()
     # insertion
     if k<=q[0]:
-        #print '===Insertion==='
-        tmp = insert(tmp)
+        tmp = insert(record)
     # deletion
     elif k<=q[1]:
-        #print '===Deletion==='
-        tmp = delete(tmp)
+        tmp = delete(record)
     # transpose
     elif k<=q[2]:
-        #print '===Transposition==='
-        tmp = transpose(tmp)
+        tmp = transpose(record)
     # substitution
     elif k<=q[3]:
-        #print '===Substitution==='
-        tmp = substitute(tmp)
-    return tmp
+        tmp = substitute(record)
+    record['modified'] = tmp
+    return record
 
 
 def add_prefix_suffix(record):
@@ -306,13 +319,15 @@ def name_variant(record, v):
     :param v: variant dictionary
     :return: modified record
     """
-    tmp = record
+    tmp = record['modified']
     t = random.randint(0,1)
     k = 'first_name' if t==0 else 'last_name'
     if tmp[k] in v.keys():
         #tmp[k] = v[tmp[k]][0]
         tmp[k] = v[tmp[k]][random.randint(0,len(v[tmp[k]])-1)]
-    return tmp
+        add_mod(record, 'name variation at '+k)
+    record['modified'] = tmp
+    return record
 
 
 def match(x, y):

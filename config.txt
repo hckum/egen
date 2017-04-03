@@ -13,18 +13,20 @@ rate_typo = 0.6
 rate_vari = 0.1
 
 # FIELD SELECTION
+# customize the input and output files here
 # select some fields from the original data
 # separated with comma
+# name_sufx_cd
 
-field = voter_reg_num, last_name, first_name, birth_age, name_sufx_cd
+field = voter_reg_num, last_name, first_name, birth_age
 output = voter_reg_num, last_name, first_name, dob
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution
 # usually no need to change this part
 
-prob_insertion = 0.4
-prob_deletion = 0.3
-prob_transpose = 0.15
-prob_substitution = 0.15
+rate_insertion = 0.4
+rate_deletion = 0.3
+rate_transpose = 0.15
+rate_substitution = 0.15
 
