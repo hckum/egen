@@ -3,6 +3,7 @@
 # 03/27/2017 first created, data preprocessing
 # 03/28/2017 add typo generation, name variant generation
 # 03/29/2017 add config file
+# TODO : implement transpose and substitute for dob
 
 import csv, zipfile, calendar, random, string, copy
 from datetime import date, datetime

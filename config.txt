@@ -1,4 +1,22 @@
 # CONFIGURATION FILE TO THE ERROR GENERATION SIMULATOR
+
+# INPUT FILES
+# Put input files in /data subfolder
+
+input = data/apr13/ncvoter100.zip
+
+# Lookup Table
+
+lookup = data/lookup.txt
+
+# OUTPUT FILES
+# Specify the file paths where the output files will be stored.
+# Do not change the variable names on the left side
+
+original_data = data/data_origin.txt
+modified_data = data/data_modified.txt
+differences = data/changes.txt
+
 # USAGE:
 #   rate : the overall error rate
 #   rate_missing : the rate of missing error
