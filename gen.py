@@ -12,12 +12,16 @@ from datetime import date, datetime
 def readzip(fpath):
     """
     Read compressed txt files with title removed.
-    :param fpath: path of the zip file
+    :param fpath: path of the source data. zip, txt and csv formats are supported.
     :return: dict with reg_nums as keys and rows as values.
     """
     d = {}
-    a = zipfile.ZipFile(fpath, 'r')
-    b = a.open(fpath.split('/')[-1][:-4]+'.txt')
+    b = ''
+    if fpath.split('.')[-1]=='zip':
+        a = zipfile.ZipFile(fpath, 'r')
+        b = a.open(fpath.split('/')[-1][:-4]+'.txt')
+    elif fpath.split('.')[-1] in ['csv', 'txt']:
+        b = open(fpath, 'r')
     reader = csv.reader(b, delimiter='\t')
     title = []
     for i in reader:

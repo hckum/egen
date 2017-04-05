@@ -91,7 +91,7 @@ def egs(config):
     with open(output1, 'wb') as f:
         w = csv.DictWriter(f, ['ID']+filter2, extrasaction='ignore')
         w.writeheader()
-        ks = sorted(dat.keys(),key=lambda x:int(x))
+        ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:
             dat[k]['original']['ID'] = dat[k]['ID']
             w.writerow(dat[k]['original'])
@@ -99,14 +99,14 @@ def egs(config):
     with open(output2, 'wb') as f:
         w = csv.DictWriter(f, ['ID']+filter2, extrasaction='ignore')
         w.writeheader()
-        ks = sorted(dat.keys(),key=lambda x:int(x))
+        ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:
             dat[k]['modified']['ID'] = dat[k]['ID']
             w.writerow(dat[k]['modified'])
 
     with open(output3, 'wb') as f:
         w = csv.writer(f)
-        ks = sorted(dat.keys(),key=lambda x:int(x))
+        ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:
             if not match(dat[k]['original'], dat[k]['modified']):
                 w.writerow([dat[k]['ID']]+[dat[k]['original'][i] for i in filter2]+[dat[k]['modified'][j] for j in filter2]+dat[k]['modifier'])

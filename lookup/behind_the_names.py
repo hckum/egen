@@ -44,6 +44,7 @@ for i in range(1,22):
         print n
         d[n] = []
         for t in rows:
+            print t
             try:
                 t.string.decode('ascii')
                 d[n] += [t.string.encode('ascii')]
