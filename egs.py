@@ -19,12 +19,12 @@ def egs(config):
     cfg = load_config(config)
     fpath = cfg['input'][0]
     lookup = cfg['lookup'][0]
-    print fpath
+
     output1 = cfg['original_data'][0]
     output2 = cfg['modified_data'][0]
     output3 = cfg['differences'][0]
 
-    filter1, filter2 = cfg['field'], cfg['output']
+    filter2 = cfg['output']
 
     rate, rate_missing, rate_swap = cfg['rate'], cfg['rate_missing'], cfg['rate_swap']
     rate_typo, rate_vari = cfg['rate_typo'], cfg['rate_vari']
@@ -33,8 +33,9 @@ def egs(config):
     ##################################################
     # 2. DATA PREPARATION
 
-    p = readzip(fpath)
-    dat = field_filter(p, filter1)
+    p = readcsv(fpath)
+
+    dat = field_filter(p, p[p.keys()[0]].keys())
     ks = sorted(dat.keys(), key=lambda x: int(x))
     for k in dat.keys():
         dat[k]['original'] = dob(dat[k]['original'])
@@ -109,5 +110,9 @@ def egs(config):
         ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:
             if not match(dat[k]['original'], dat[k]['modified']):
-                w.writerow([dat[k]['ID']]+[dat[k]['original'][i] for i in filter2]+[dat[k]['modified'][j] for j in filter2]+dat[k]['modifier'])
+                w.writerow([dat[k]['ID']]+[dat[k]['original'][i] for i in filter2]
+                           +[dat[k]['modified'][j] for j in filter2]
+                           +[';'.join(dat[k]['modifier']['mod']),
+                             ';'.join(dat[k]['modifier']['field']),
+                             ';'.join(dat[k]['modifier']['pos'])])
 

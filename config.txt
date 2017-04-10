@@ -3,7 +3,7 @@
 # INPUT FILES
 # Put input files in /data subfolder
 
-input = data/apr13/ncvoter100.zip
+input = data/apr13.csv
 
 # Lookup Table
 
@@ -13,9 +13,9 @@ lookup = data/lookup.txt
 # Specify the file paths where the output files will be stored.
 # Do not change the variable names on the left side
 
-original_data = data/data_origin.txt
-modified_data = data/data_modified.txt
-differences = data/changes.txt
+original_data = data/data_origin.csv
+modified_data = data/data_modified.csv
+differences = data/changes.csv
 
 # USAGE:
 #   rate : the overall error rate
