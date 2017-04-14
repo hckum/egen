@@ -29,7 +29,11 @@ rate_missing = 0.2
 rate_swap = 0.1
 rate_typo = 0.6
 rate_vari = 0.1
+
+# If specified, must also list name of suffix field
 rate_suffix = 0.1
+var_suffix=name_suff_cd
+
 
 # FIELD SELECTION
 # customize the input and output files here
@@ -37,7 +41,7 @@ rate_suffix = 0.1
 # separated with comma
 # name_sufx_cd
 
-output = voter_reg_num, last_name, first_name, dob
+fields = voter_reg_num, last_name, first_name, dob
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution
