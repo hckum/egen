@@ -27,6 +27,7 @@ def egs(config):
     filter2 = cfg['output']
 
     rate, rate_missing, rate_swap = cfg['rate'], cfg['rate_missing'], cfg['rate_swap']
+    rate_suffix = cfg['rate_suffix']
     rate_typo, rate_vari = cfg['rate_typo'], cfg['rate_vari']
     typo_prob = [cfg['rate_insertion'], cfg['rate_deletion'], cfg['rate_transpose'], cfg['rate_substitution']]
 
@@ -35,13 +36,14 @@ def egs(config):
 
     p = readcsv(fpath)
 
-    dat = field_filter(p, p[p.keys()[0]].keys())
+    dat,suffix = field_filter(p, p[p.keys()[0]].keys())
+    print p[p.keys()[0]].keys()
     ks = sorted(dat.keys(), key=lambda x: int(x))
     for k in dat.keys():
         dat[k]['original'] = dob(dat[k]['original'])
         dat[k]['modified'] = copy.deepcopy(dat[k]['original'])
         dat[k]['ID'] = str(ks.index(k)+1)
-
+    #print(suffix)
 
     ##################################################
     # 3. LOOKUP TABLE PREPARATION
@@ -56,7 +58,7 @@ def egs(config):
     # 4. ERROR RATEs PREPARATION
 
     n = int(rate*len(dat.keys()))
-    prob = [rate_missing, rate_swap, rate_typo, rate_vari]
+    prob = [rate_missing, rate_swap, rate_typo, rate_vari,rate_suffix]
     op = [x / float(sum(prob)) for x in prob]
     q = [sum(op[:x]) for x in range(1, len(op) + 1)]
 
@@ -80,11 +82,16 @@ def egs(config):
             dat[k] = add_typo(dat[k], typo_prob)
         elif p < q[3]:
             dat[k] = name_variant(dat[k], v)
+        elif p < q[4]:
+            t = random.randint(0, len(suffix) - 1)
+            k = suffix[t]
+            dat[k] = add_suffix(dat[k])
+            del suffix[t]
         if not match(dat[k]['modified'], dat[k]['original']):
             d[k] = dat[k]['modified']
             n_error += 1
 
-    print len(d)/float(len(dat))
+    print(len(d)/float(len(dat)))
 
     ##################################################
     # 6. WRITE OUTPUT TO FILES

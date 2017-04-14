@@ -29,6 +29,7 @@ rate_missing = 0.2
 rate_swap = 0.1
 rate_typo = 0.6
 rate_vari = 0.1
+rate_suffix = 0.1
 
 # FIELD SELECTION
 # customize the input and output files here
@@ -36,7 +37,6 @@ rate_vari = 0.1
 # separated with comma
 # name_sufx_cd
 
-field = voter_reg_num, last_name, first_name, birth_age
 output = voter_reg_num, last_name, first_name, dob
 
 # PROBABILITIES OF TYPO ERRORS

@@ -48,7 +48,7 @@ def readzip(fpath):
     elif fpath.split('.')[-1] in ['csv', 'txt']:
         b = open(fpath, 'r')
         reader = csv.reader(b)
-    print "Read in data from "+fpath
+    print("Read in data from "+fpath)
     title = []
     for i in reader:
         if i[2] == 'voter_reg_num':
@@ -72,6 +72,7 @@ def field_filter(data, fields):
     :return: data only with selected fields
     """
     d = {}
+    suffix = []
     for k in data.keys():
         d[k] = {}
         d[k]['original'] = {}
@@ -79,7 +80,10 @@ def field_filter(data, fields):
         d[k]['modifier'] = {'mod':[], 'field':[], 'pos':[]}
         for f in fields:
             d[k]['original'][f] = data[k][f]
-    return d
+        if(data[k]["name_sufx_cd"] != ""):
+            suffix.append(k)
+
+    return (d,suffix)
 
 
 def load_config(fpath):
@@ -381,4 +385,14 @@ def match(x, y):
     return True
 
 
+def add_suffix(record):
+    """
 
+    :param record: 
+    :return: 
+    """
+    suffix = record['original']["name_sufx_cd"]
+    record['modified']["last_name"] = record['original']["last_name"] +' '+ suffix
+    #record["name_sufx_cd"] = None
+    add_mod(record, 'add_suffix', 'last_name', '')
+    return record

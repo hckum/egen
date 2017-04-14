@@ -6,7 +6,7 @@ import csv, zipfile
 path = 'data/apr13/ncvoter100.zip'
 output = 'data/apr13.csv'
 
-field = ['voter_reg_num', 'last_name', 'first_name', 'birth_age']
+field = ['voter_reg_num', 'last_name', 'first_name', 'birth_age','name_sufx_cd']
 
 
 def readzip(fpath):
