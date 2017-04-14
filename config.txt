@@ -41,7 +41,11 @@ var_suffix=name_suff_cd
 # separated with comma
 # name_sufx_cd
 
-fields = voter_reg_num, last_name, first_name, dob
+# variable length string: v
+# fixed length string: f
+# date: d
+
+fields_foramts = voter_reg_num:f, last_name: v, first_name:v, dob:d
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution
