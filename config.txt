@@ -26,7 +26,8 @@ differences = data/changes.csv
 
 rate = 0.03
 rate_missing = 0.2
-rate_swap = 0.1
+rate_swap_name = 0.05
+rate_swap_dob = 0.05
 rate_typo = 0.6
 rate_vari = 0.1
 
@@ -45,7 +46,7 @@ var_suffix=name_suff_cd
 # fixed length string: f
 # date: d
 
-fields_foramts = voter_reg_num:f, last_name: v, first_name:v, dob:d
+fields_formats = voter_reg_num:f, last_name: v, first_name:v, dob:d
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution

@@ -101,7 +101,8 @@ def load_config(fpath):
                 if k[1].strip()[0].isdigit():
                     d[k[0].strip()] = float(k[1].strip())
                 else:
-                    d[k[0].strip()] = list([x.strip() for x in k[1].split(',')])
+                    d[k[0].strip()] = list([tuple(x.strip().split(':')) if ':' in x else x.strip() for x in k[1].split(',')])
+    print d
     return d
 
 
@@ -392,7 +393,7 @@ def add_suffix(record):
     :return: 
     """
     suffix = record['original']["name_sufx_cd"]
-    record['modified']["last_name"] = record['original']["last_name"] +' '+ suffix
+    record['modified']["last_name"] = record['modified']["last_name"] + ' ' + suffix
     #record["name_sufx_cd"] = None
     add_mod(record, 'add_suffix', 'last_name', '')
     return record
