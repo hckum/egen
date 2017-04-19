@@ -20,12 +20,12 @@ def readcsv(fpath):
     title = []
     reader = csv.reader(b)
     for i in reader:
-        if i[0] == 'voter_reg_num':
+        if i[1] == 'voter_reg_num':
             title = [x.strip() for x in i]
             break
 
     for i in reader:
-        if i[0] != 'voter_reg_num':
+        if i[1] != 'voter_reg_num':
             d[i[0]] = {}
             for n in range(len(i)):
                 d[i[0]][title[n]] = i[n].strip()
@@ -73,16 +73,18 @@ def field_filter(data, fields):
     """
     d = {}
     suffix = []
+    i = 0
     for k in data.keys():
         d[k] = {}
         d[k]['original'] = {}
         d[k]['modified'] = {}
         d[k]['modifier'] = {'mod':[], 'field':[], 'pos':[]}
+        d[k]['ID'] = i
         for f in fields:
             d[k]['original'][f] = data[k][f]
         if(data[k]["name_sufx_cd"] != ""):
             suffix.append(k)
-
+        i+=1
     return (d,suffix)
 
 

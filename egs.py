@@ -25,7 +25,7 @@ def egs(config):
     output3 = cfg['differences'][0]
 
     filter2 = [x[0] for x in cfg['fields_formats']]
-
+    print filter2
     rate, rate_missing = cfg['rate'], cfg['rate_missing']
     rate_swap_name, rate_swap_dob = cfg['rate_swap_name'], cfg['rate_swap_dob']
     rate_suffix = cfg['rate_suffix']
@@ -36,14 +36,13 @@ def egs(config):
     # 2. DATA PREPARATION
 
     p = readcsv(fpath)
-
     dat,suffix = field_filter(p, p[p.keys()[0]].keys())
     print p[p.keys()[0]].keys()
     ks = sorted(dat.keys(), key=lambda x: int(x))
     for k in dat.keys():
-        dat[k]['original'] = dob(dat[k]['original'])
+        #dat[k]['original'] = dob(dat[k]['original'])
         dat[k]['modified'] = copy.deepcopy(dat[k]['original'])
-        dat[k]['ID'] = str(ks.index(k)+1)
+        #dat[k]['ID'] = str(ks.index(k)+1)
     #print(suffix)
 
     ##################################################
@@ -176,15 +175,17 @@ def egs(config):
     # 6. WRITE OUTPUT TO FILES
 
     with open(output1, 'wb') as f:
-        w = csv.DictWriter(f, ['ID']+filter2, extrasaction='ignore')
+        w = csv.DictWriter(f, filter2, extrasaction='ignore')
         w.writeheader()
         ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:
+
             dat[k]['original']['ID'] = dat[k]['ID']
+            #print dat[k]['original']
             w.writerow(dat[k]['original'])
 
     with open(output2, 'wb') as f:
-        w = csv.DictWriter(f, ['ID']+filter2, extrasaction='ignore')
+        w = csv.DictWriter(f, filter2, extrasaction='ignore')
         w.writeheader()
         ks = sorted(dat.keys(), key=lambda x : int(x))
         for k in ks:

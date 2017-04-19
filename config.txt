@@ -46,7 +46,7 @@ var_suffix=name_suff_cd
 # fixed length string: f
 # date: d
 
-fields_formats = voter_reg_num:f, last_name: v, first_name:v, dob:d
+fields_formats = ID:, voter_reg_num:f, last_name: v, first_name:v, dob:d
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution
