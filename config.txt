@@ -1,4 +1,6 @@
-# CONFIGURATION FILE TO THE ERROR GENERATION SIMULATOR
+##======================================================##
+## CONFIGURATION FILE TO THE ERROR GENERATION SIMULATOR ##
+##======================================================##
 
 # INPUT FILES
 # Put input files in /data subfolder
@@ -42,18 +44,32 @@ var_suffix=name_suff_cd
 # separated with comma
 # name_sufx_cd
 
-# variable length string: v
-# fixed length string: f
+# immutable: i
 # date: d
+# fixed length: f
+# variable length: v
+# merge alphabetics and digits into one class
 
-fields_formats = ID:, voter_reg_num:f, last_name: v, first_name:v, dob:d
+fields_formats = ID:if, voter_reg_num:f, last_name:v, first_name:v, dob:d
 
 # PROBABILITIES OF TYPO ERRORS
 # probability of insertion, deletion, transposition, substitution
 # usually no need to change this part
 
-rate_insertion = 0.4
-rate_deletion = 0.3
-rate_transpose = 0.15
-rate_substitution = 0.15
+# variable length
+v_rate_insertion = 0.4
+v_rate_deletion = 0.3
+v_rate_transpose = 0.15
+v_rate_substitution = 0.15
 
+# fixed length
+f_rate_insertion = 0.5
+f_rate_transpose = 0.25
+f_rate_substitution = 0.25
+
+# date
+d_rate_transpose = 0.5
+d_rate_substitution = 0.5
+
+################# ADVANCED
+pins_neigh = 2
