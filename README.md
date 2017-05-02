@@ -1,5 +1,5 @@
 # Error Generation Simulator
-
+[![Build Status](https://travis-ci.org/hwangtamu/EGS.svg?branch=master)](https://travis-ci.org/hwangtamu/EGS)
 ### Contents
  
 ### Data Source
