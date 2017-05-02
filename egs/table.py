@@ -1,8 +1,7 @@
 from record import *
 from collections import OrderedDict
 import csv, random, copy
-
-
+import config
 class Table:
     """
     Class for a data set
@@ -19,9 +18,13 @@ class Table:
         self.error_registry = {}
         self.fields = {'d':0, 'v':0, 'f':0}
 
-    def load_config(self, fpath):
+    def load_config(self, fpath=''):
         d = {}
-        for line in open(fpath, 'r'):
+        if fpath:
+            tmp = open(fpath, 'r')
+        else:
+            tmp = config.c
+        for line in tmp:
             l = line.strip()
             if not l.startswith('#'):
                 k = l.split('=')
