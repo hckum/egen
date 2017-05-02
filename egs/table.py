@@ -250,7 +250,7 @@ class Table:
 
                 counter+=1
                 self.error_registry[k] += [pos]
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_deletion:
@@ -266,7 +266,7 @@ class Table:
                 record.data[f_index].delete(pos)
 
                 counter += 1
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_transpose:
@@ -284,7 +284,7 @@ class Table:
 
                     counter += 1
                     self.error_registry[k] += [pos, pos+1]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_replace:
@@ -302,7 +302,7 @@ class Table:
 
                     counter += 1
                     self.error_registry[k] += [pos]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         ####################################
         # Fixed Length Typo
@@ -323,7 +323,7 @@ class Table:
 
                 counter += 1
                 self.error_registry[k] += [pos]
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nf_transpose:
@@ -341,7 +341,7 @@ class Table:
 
                     counter += 1
                     self.error_registry[k] += [pos, pos + 1]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nf_replace:
@@ -359,7 +359,7 @@ class Table:
 
                     counter += 1
                     self.error_registry[k] += [pos]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         ####################################
         # Date Typo
@@ -383,7 +383,7 @@ class Table:
                     if tmp!=record.data[f_index].modified:
                         counter += 1
                         self.error_registry[k] += [pos]
-                        print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                        print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nd_replace:
@@ -403,7 +403,7 @@ class Table:
                     if tmp!=record.data[f_index].modified:
                         counter += 1
                         self.error_registry[k] += [pos]
-                        print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                        print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
     def generate(self):
         """
