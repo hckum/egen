@@ -2,10 +2,13 @@ from record import *
 from collections import OrderedDict
 import csv, random, copy
 import config
+
+
 class Table:
     """
     Class for a data set
     """
+
     def __init__(self):
         self.title = []
         self.original = []
@@ -16,7 +19,7 @@ class Table:
         self.length = 0
         self.n = 0
         self.error_registry = {}
-        self.fields = {'d':0, 'v':0, 'f':0}
+        self.fields = {'d': 0, 'v': 0, 'f': 0}
 
     def load_config(self, fpath=''):
         d = {}
@@ -38,19 +41,19 @@ class Table:
 
     def load_data(self, fpath):
         """
-        
+
         :param fpath: load csv data 
         :return: 
         """
         tmp = []
-        f = open(fpath,'r')
+        f = open(fpath, 'r')
         reader = csv.reader(f)
         for i in reader:
-            tmp+=[i]
+            tmp += [i]
         self.title = tmp[0]
         self.n = len(self.title)
-        for r in range(1,len(tmp)):
-            self.original+=[OrderedDict([(tmp[0][i], tmp[r][i]) for i in range(len(tmp[0]))])]
+        for r in range(1, len(tmp)):
+            self.original += [OrderedDict([(tmp[0][i], tmp[r][i]) for i in range(len(tmp[0]))])]
 
         # generate format list
         config = OrderedDict(self.config['fields_formats'])
@@ -64,7 +67,7 @@ class Table:
 
         t = float(sum(self.fields.values()))
         for f in self.fields.keys():
-            self.fields[f] /=t
+            self.fields[f] /= t
 
         for i in self.original[0].keys():
             if i in config.keys():
@@ -77,7 +80,7 @@ class Table:
             self.data += [Record(i, self.formats)]
         self.length = len(self.data)
 
-    def select(self,n):
+    def select(self, n):
         """
         Select the Nth record
         :param n: 
@@ -89,7 +92,7 @@ class Table:
         """        
         :return: randomly selected record
         """
-        n = random.randint(0, self.length-1)
+        n = random.randint(0, self.length - 1)
         return self.data[n]
 
     def index_of(self, record):
@@ -101,7 +104,7 @@ class Table:
 
     @staticmethod
     def conditional_sample(a, b):
-        return random.choice(list(set(a)-set(b)))
+        return random.choice(list(set(a) - set(b)))
 
     def get_modified_data(self):
         self.modified = [x.get_modified() for x in self.data]
@@ -121,12 +124,12 @@ class Table:
             record = self.random_select()
             ind = self.index_of(record)
             f_index = record.random_select_by_format('d')
-            if ind*self.n+f_index not in self.error_registry:
+            if ind * self.n + f_index not in self.error_registry:
                 record.data[f_index].missing()
-                #record.collect_mod()
+                # record.collect_mod()
 
-                self.error_registry[ind*self.n+f_index] = [-1]
-                counter+=1
+                self.error_registry[ind * self.n + f_index] = [-1]
+                counter += 1
 
     def swap(self, n, repetitive=False):
         """
@@ -142,13 +145,13 @@ class Table:
             ind = self.index_of(record)
             f_index_1 = self.title.index('last_name')
             f_index_2 = self.title.index('first_name')
-            if ind*self.n+f_index_1 not in self.error_registry:
+            if ind * self.n + f_index_1 not in self.error_registry:
                 record.swap(f_index_1, f_index_2)
-                #record.collect_mod()
+                # record.collect_mod()
 
-                self.error_registry[ind*self.n+f_index_1] = []
-                self.error_registry[ind*self.n+f_index_2] = []
-                counter+=1
+                self.error_registry[ind * self.n + f_index_1] = []
+                self.error_registry[ind * self.n + f_index_2] = []
+                counter += 1
 
     def date_swap(self, n, repetitive=False):
         """
@@ -182,11 +185,11 @@ class Table:
             record = self.random_select()
             ind = self.index_of(record)
             f_index = self.title.index('first_name')
-            if ind*self.n+f_index not in self.error_registry:
+            if ind * self.n + f_index not in self.error_registry:
                 record.variant(f_index, 'NICKNAME')
 
-                self.error_registry[ind*self.n+f_index] = []
-                counter+=1
+                self.error_registry[ind * self.n + f_index] = []
+                counter += 1
 
     def add_suffix(self, n, repetitive=False):
         """
@@ -243,14 +246,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k]!=[-1] and record.data[f_index].length>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length), self.error_registry[k])
 
                 record.data[f_index].insert(pos)
 
-                counter+=1
+                counter += 1
                 self.error_registry[k] += [pos]
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_deletion:
@@ -260,13 +263,13 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k]!=[-1] and record.data[f_index].length-1>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 1 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length), self.error_registry[k])
 
                 record.data[f_index].delete(pos)
 
                 counter += 1
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_transpose:
@@ -276,15 +279,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k]!=[-1] and record.data[f_index].length-2>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 2 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length - 1), self.error_registry[k])
-                if pos+1 not in self.error_registry[k]:
-
+                if pos + 1 not in self.error_registry[k]:
                     record.data[f_index].transpose(pos)
 
                     counter += 1
-                    self.error_registry[k] += [pos, pos+1]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    self.error_registry[k] += [pos, pos + 1]
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nv_replace:
@@ -294,15 +296,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k] != [-1] and record.data[f_index].length-1>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 1 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length), self.error_registry[k])
                 if pos not in self.error_registry[k]:
-
                     record.data[f_index].replace(pos)
 
                     counter += 1
                     self.error_registry[k] += [pos]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         ####################################
         # Fixed Length Typo
@@ -316,14 +317,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k] != [-1] and record.data[f_index].length-1>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 1 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length), self.error_registry[k])
 
                 record.data[f_index].insert(pos)
 
                 counter += 1
                 self.error_registry[k] += [pos]
-                print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nf_transpose:
@@ -333,15 +334,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k] != [-1] and record.data[f_index].length-1>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 1 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length - 1), self.error_registry[k])
                 if pos + 1 not in self.error_registry[k]:
-
                     record.data[f_index].transpose(pos)
 
                     counter += 1
                     self.error_registry[k] += [pos, pos + 1]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nf_replace:
@@ -351,15 +351,14 @@ class Table:
             k = ind * self.n + f_index
             if k not in self.error_registry:
                 self.error_registry[k] = []
-            if self.error_registry[k] != [-1] and record.data[f_index].length-1>len(self.error_registry[k]):
+            if self.error_registry[k] != [-1] and record.data[f_index].length - 1 > len(self.error_registry[k]):
                 pos = self.conditional_sample(range(record.data[f_index].length), self.error_registry[k])
                 if pos not in self.error_registry[k]:
-
                     record.data[f_index].replace(pos)
 
                     counter += 1
                     self.error_registry[k] += [pos]
-                    print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                    print(record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         ####################################
         # Date Typo
@@ -380,10 +379,11 @@ class Table:
 
                     record.data[f_index].transpose(pos)
 
-                    if tmp!=record.data[f_index].modified:
+                    if tmp != record.data[f_index].modified:
                         counter += 1
                         self.error_registry[k] += [pos]
-                        print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                        print(
+                        record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
         counter = 0
         while counter < nd_replace:
@@ -394,16 +394,17 @@ class Table:
             if k not in self.error_registry:
                 self.error_registry[k] = []
             if self.error_registry[k] != [-1]:
-                pos = self.conditional_sample(['y','m','d'], self.error_registry[k])
+                pos = self.conditional_sample(['y', 'm', 'd'], self.error_registry[k])
                 if pos not in self.error_registry[k]:
                     tmp = copy.deepcopy(record.data[f_index].modified)
 
                     record.data[f_index].replace(pos)
 
-                    if tmp!=record.data[f_index].modified:
+                    if tmp != record.data[f_index].modified:
                         counter += 1
                         self.error_registry[k] += [pos]
-                        print record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier
+                        print(
+                        record.data[f_index].original, record.data[f_index].modified, record.data[f_index].modifier)
 
     def generate(self):
         """
@@ -443,13 +444,13 @@ class Table:
             writer.writeheader()
             writer.writerows(self.get_modified_data())
 
-    def write_difference(self,fpath):
+    def write_difference(self, fpath):
         with open(fpath, 'wb') as f:
             writer = csv.writer(f)
             fieldnames = [x[0] for x in self.config['fields_formats']] * 2 + ['modif', 'field', 'pos']
             writer.writerow(fieldnames)
             for record in self.data:
-                if record.modifier['modif']!=[]:
+                if record.modifier['modif'] != []:
                     tmp = record.original.values()
                     tmp += record.modified.values()
                     tmp_mod = record.modifier.copy()
