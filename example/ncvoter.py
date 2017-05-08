@@ -36,7 +36,7 @@ def dob(record):
     :return: modified data by replacing age with dob.
     """
     tmp = record
-    s = ' '.join(record)
+    s = ' '.join(record[:3])
     ymd = date.fromordinal(sum([ord(x) for x in s])).isoformat()
     year = 2017 - int(record[3])
     # leap year 02-29 validation

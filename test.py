@@ -4,9 +4,9 @@
 
 from egs.table import Table
 
-if __name__ == "__main__":
-    t = Table()
-    t.load_config('example/config.txt')
-    t.load_data('example/data/apr13.csv')
-    t.generate()
-    t.write()
+t = Table()
+t.load_config('example/config.txt')
+t.load_data('example/data/apr13.csv')
+t.load_lookup('data/lookup.csv')
+t.generate()
+t.write()

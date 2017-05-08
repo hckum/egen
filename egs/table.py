@@ -2,6 +2,8 @@ from record import *
 from collections import OrderedDict
 import csv, random, copy
 import config
+
+
 class Table:
     """
     Class for a data set
@@ -17,6 +19,7 @@ class Table:
         self.n = 0
         self.error_registry = {}
         self.fields = {'d':0, 'v':0, 'f':0}
+        self.lookup = {}
 
     def load_config(self, fpath=''):
         d = {}
@@ -76,6 +79,12 @@ class Table:
         for i in self.original:
             self.data += [Record(i, self.formats)]
         self.length = len(self.data)
+
+    def load_lookup(self, fpath):
+        f = open(fpath, 'r')
+        reader = csv.reader(f)
+        for i in reader:
+            self.lookup[i[0]] = [x.upper() for x in i[1:]]
 
     def select(self,n):
         """
@@ -182,11 +191,14 @@ class Table:
             record = self.random_select()
             ind = self.index_of(record)
             f_index = self.title.index('first_name')
-            if ind*self.n+f_index not in self.error_registry:
-                record.variant(f_index, 'NICKNAME')
+            if record.data[f_index].modified in self.lookup:
+                t = self.lookup[record.data[f_index].modified]
+                c = len(t)
+                if ind*self.n+f_index not in self.error_registry and c > 0:
+                    record.variant(f_index, t[random.randint(0,c-1)])
 
-                self.error_registry[ind*self.n+f_index] = []
-                counter+=1
+                    self.error_registry[ind*self.n+f_index] = []
+                    counter+=1
 
     def add_suffix(self, n, repetitive=False):
         """
