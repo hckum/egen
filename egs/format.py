@@ -1,6 +1,10 @@
 import string, random, datetime
 
 
+def match(a,b):
+    return a == b
+
+
 class FixedLength:
     """
     fixed length string
@@ -51,8 +55,10 @@ class FixedLength:
         self.add_mod('insertion',self.field,pos)
 
     def transpose(self, pos):
-        self.modified = self.modified[:pos]+self.modified[pos+1]+self.modified[pos]+self.modified[pos+2:]
-        self.add_mod('transpose', self.field, pos)
+        tmp = self.modified[:pos]+self.modified[pos+1]+self.modified[pos]+self.modified[pos+2:]
+        if not match(tmp, self.modified):
+            self.modified = tmp
+            self.add_mod('transpose', self.field, pos)
 
     def replace(self, pos):
         values = self.ref[self.modified[pos]]
@@ -120,8 +126,10 @@ class VariableLength:
         self.add_mod('deletion', self.field, pos)
 
     def transpose(self, pos):
-        self.modified = self.modified[:pos]+self.modified[pos+1]+self.modified[pos]+self.modified[pos+2:]
-        self.add_mod('transpose', self.field, pos)
+        tmp = self.modified[:pos] + self.modified[pos + 1] + self.modified[pos] + self.modified[pos + 2:]
+        if not match(tmp, self.modified):
+            self.modified = tmp
+            self.add_mod('transpose', self.field, pos)
 
     def replace(self, pos):
         values = self.ref[self.modified[pos]]

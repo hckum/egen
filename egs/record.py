@@ -46,6 +46,9 @@ class Record:
         self.modifier['modif'] += [mod]
         self.modifier['field'] += [field]
         self.modifier['pos'] += [pos]
+    @staticmethod
+    def match(a,b):
+        return a==b
 
     def swap(self, a, b):
         """
@@ -53,16 +56,18 @@ class Record:
         :param b: field2 index 
         :return: 
         """
-        tmp = self.data[a].modified
+        if not self.match(self.data[a].modified, self.data[b].modified):
+            tmp = self.data[a].modified
 
-        self.data[a].modified = self.data[b].modified
-        self.data[b].modified = tmp
+            self.data[a].modified = self.data[b].modified
+            self.data[b].modified = tmp
 
-        self.add_mod('swap', self.fields[a]+' '+self.fields[b], -1)
+            self.add_mod('swap', self.fields[a]+' '+self.fields[b], -1)
 
     def date_swap(self, n):
-        self.data[n].swap()
-        self.add_mod('date_swap', self.fields[n], -1)
+        if not self.match(self.data[n].month, self.data[n].day):
+            self.data[n].swap()
+            self.add_mod('date_swap', self.fields[n], -1)
 
     def missing(self, i):
         self.data[i].missing()
