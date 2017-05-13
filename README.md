@@ -1,4 +1,4 @@
-# Error Generation (EGEN) for Benmarking Record Linkage Algorithms 
+# Error Generation (EGEN) for Benchmarking Record Linkage Algorithms 
 [![Build Status](https://travis-ci.org/hwangtamu/EGS.svg?branch=master)](https://travis-ci.org/hwangtamu/EGS)
 
 THIS IS WORK IN PROGRESS.
