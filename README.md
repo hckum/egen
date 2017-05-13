@@ -1,9 +1,12 @@
 # Error Generation Simulator
 [![Build Status](https://travis-ci.org/hwangtamu/EGS.svg?branch=master)](https://travis-ci.org/hwangtamu/EGS)
 
-This software is used for synthetic data generation by introducing errors to clean record database. Various types of errors can be generated based on the user-customized configuration. Currently, this software supports alphabetical and numeric data formats. Alphanumeric format will be supported in the future.
+THIS IS WORK IN PROGRESS.
+We recommend you contact us before using it (kum at tamu dot edu).
 
-The error types include typos (insertion, deletion, transposition and replace), field swap, field missing, human name variation and month/day transposition.
+This software is used for derived data generation by introducing errors to real record database. Various types of errors can be generated based on the user-customized configuration. Currently, this software supports alphabetical and numeric data formats. Alphanumeric format will be supported in the future.
+
+The error types include typos (insertion, deletion, transposition and replace), field swap (first & last name, month and data), field missing, and human name variation (both nicknames, and common misspellings).
 
 ## Dependency
 `python==2.7`
