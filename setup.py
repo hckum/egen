@@ -1,12 +1,12 @@
 from distutils.core import setup
 
 setup(
-    name='egs',
+    name='egen',
     version='0.1',
-    packages=['egs'],
+    packages=['egen'],
     url='',
     license='Apache 2.0',
-    author='Han',
+    author='Han Wang',
     author_email='hanwang@tamu.edu',
-    description='Error Generation Simulator'
+    description='Error Generation (EGEN) for Benchmarking Record Linkage Algorithms'
 )

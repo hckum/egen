@@ -16,8 +16,8 @@ Currently, we only handle DOB. Next version will include handling age.
 `python==2.7`
 ## Installation
 ```
-$git clone https://github.com/hwangtamu/EGS.git
-$cd EGS
+$git clone https://github.com/hwangtamu/egen.git
+$cd egen
 $python setup.py install
 ```
 
@@ -25,7 +25,7 @@ $python setup.py install
 
 Try the following code:
 ```python
->>>from egs.table import Table
+>>>from egen.table import Table
 >>>t = Table()
 >>>t.load_config(config_path) # the config_path can be empty
 >>>t.load_data(data_path) # the path of raw data

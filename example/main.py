@@ -2,7 +2,7 @@
 # by Han Wang
 # 03/28/2017
 
-from egs.table import Table
+from egen.table import Table
 
 if __name__ == "__main__":
     t = Table()
