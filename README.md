@@ -1,5 +1,5 @@
 # Error Generation (EGEN) for Benchmarking Record Linkage Algorithms 
-[![Build Status](https://travis-ci.org/hwangtamu/EGS.svg?branch=master)](https://travis-ci.org/hwangtamu/EGS)
+[![Build Status](https://travis-ci.org/hwangtamu/egen.svg?branch=master)](https://travis-ci.org/hwangtamu/egen)
 
 THIS IS WORK IN PROGRESS.
 We recommend you contact us before using it (kum at tamu dot edu).
